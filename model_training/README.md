@@ -39,12 +39,18 @@ This directory contains all machine learning training code, notebooks, and resul
 
 ## 🚀 How to Use
 
-### 1. Training from Scratch
+### 1. Obtain dataset
+Download the dataset from Kaggle at
+https://www.kaggle.com/datasets/marcoryvandijk/vespa-velutina-v-crabro-vespulina-vulgaris?resource=download
+
+Extract the dataset into the `model_training/dataset` directory
+
+### 2. Training from Scratch
 ```bash
 jupyter lab hornet_wasp_classifier_with_yolo.ipynb
 ```
 
-### 2. Loading Trained Model
+### 3. Loading Trained Model
 ```python
 import torch
 from torchvision import models
@@ -55,7 +61,7 @@ model.load_state_dict(torch.load('best_model_resnet50_cropped.pth'))
 model.eval()
 ```
 
-### 3. Making Predictions
+### 4. Making Predictions
 ```python
 # For new images with YOLO bounding boxes
 prediction = predict_with_confidence(model, image_path, transform, class_names)
