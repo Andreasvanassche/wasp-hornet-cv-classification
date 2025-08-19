@@ -1,0 +1,52 @@
+# Multi-stage build for smaller production image
+FROM python:3.10-slim as builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Production stage
+FROM python:3.10-slim
+
+# Install only runtime dependencies
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash app
+USER app
+WORKDIR /home/app
+
+# Copy installed packages from builder stage
+COPY --from=builder --chown=app:app /root/.local /home/app/.local
+ENV PATH=/home/app/.local/bin:$PATH
+
+# Copy application code
+COPY --chown=app:app app.py .
+COPY --chown=app:app ./trained_model/best_model_resnet50_cropped.pth ./model/
+
+# Create directories for uploads (if needed)
+RUN mkdir -p uploads
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run the application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

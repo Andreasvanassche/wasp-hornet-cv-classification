@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  hornet-wasp-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount model file (read-only)
+      - ./trained_model/best_model_resnet50_cropped.pth:/home/app/model/best_model_resnet50_cropped.pth:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - hornet-wasp-api
+    restart: unless-stopped
+    profiles:
+      - production
