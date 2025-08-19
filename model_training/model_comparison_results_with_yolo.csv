@@ -1,0 +1,5 @@
+Model,Accuracy,Precision,Recall,F1-Score,Training Time (s),Data Type,Parameters
+Custom CNN (Full Image),0.3973,0.4853,0.3973,0.3700,212.1,Full,"27,788,035"
+ResNet50 (Full Image),0.9529,0.9533,0.9529,0.9530,356.2,Full,"24,558,659"
+Vision Transformer (Full Image),0.3367,0.1134,0.3367,0.1696,273.0,Full,"11,020,035"
+ResNet50 (Cropped),0.9785,0.9795,0.9785,0.9786,361.5,Cropped,"24,558,659"
