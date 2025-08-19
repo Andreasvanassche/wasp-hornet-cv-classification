@@ -4,8 +4,7 @@ This directory contains all machine learning training code, notebooks, and resul
 
 ## 📂 Contents
 
-- `hornet_wasp_classifier_with_yolo.ipynb` - **Main training notebook** with YOLO integration
-- `hornet_wasp_classifier.ipynb` - Original notebook (full image classification)
+- `hornet_wasp_classifier_with_yolo.ipynb` - Training notebook with YOLO integration
 - `best_model_resnet50_cropped.pth` - Best performing trained model
 - `model_comparison_results_with_yolo.csv` - Performance metrics comparison
 
